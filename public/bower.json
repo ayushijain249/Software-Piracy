@@ -1,0 +1,20 @@
+{
+  "name": "public",
+  "homepage": "https://github.com/ayushijain249/Software-Piracy",
+  "authors": [
+    "Ayushi <ayujain249@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^4.0.0"
+  }
+}
