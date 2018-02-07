@@ -6,7 +6,12 @@ var fs = require('fs');
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 
 console.log("Talking with a geth server", web3.version.api);
-var sourceCode = fs.readFileSync('./sol/getHash.sol','utf8')
+  
+
+
+var sourceCode = fs.readFileSync('./sol/getHash.sol','utf8',function(error,data){
+    console.log(data);
+});
 var compiled = solc.compile(sourceCode);
 var abiArray = compiled.contracts["MyToken"].interface;
 abiArray = JSON.parse(abiArray);

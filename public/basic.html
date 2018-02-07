@@ -1,3 +1,58 @@
 <html>
+<head>
+        <script src="./node_modules/web3/dist/web3.min.js"></script>
+
+    <script src="./basic.js"></script>
+
+</head>
+<body>
+    <form>
+        Enter data : <input id="name" type="text">
+        <br> <input id="submitbutton" type="submit" value="submit">
+    </form>
+<script>
+if(typeof web3 !=='undefined'){
+web3=new Web3(web3.currentProvider);
+
+}
+else {
+    web3=new Web3(new Web3.providers.HttpProviders("http://localhost:8545"));
+}
+web3.eth.defaultAccount=web3.eth.accounts[0];
+//copying Abi value from  contract
+var spcontract=web3.eth.contract([
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "get",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "hidd",
+				"type": "address"
+			}
+		],
+		"name": "set",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+]);
+
+var spContract=spcontract.at('0x692a70d2e424a56d2c6c27aa97d1a86395877b3a');
+console.log(spContract);
+    </script>
+<body>
     </html>
-    
