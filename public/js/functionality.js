@@ -5,6 +5,7 @@ var accounts;
 var defaultAccount;
 
 function init() {
+  document.getElementById("retry").hidden = true;
   if (typeof web3 !== 'undefined') {
     // Use Mist/MetaMask's provider
     window.web3 = new Web3(web3.currentProvider);
@@ -48,7 +49,8 @@ function doGetAccounts() {
       console.log("accounts-count" + result.length);
       // You need to have at least 1 account to proceed
       if (result.length == 0) {
-        alert("Unlock MetaMask");
+        document.getElementById("retry").hidden = false;
+        alert("Unlock MetaMask and press retry");
         return;
       }
 
@@ -57,8 +59,7 @@ function doGetAccounts() {
       console.log("coinbase....." + coinbase);
       // set the default accounts
       defaultAccount = web3.eth.defaultAccount;
-
-      console.log("default Account----- >" + defaultAccount);
+     console.log("default Account----- >" + defaultAccount);
       postAccountAddress();
     }
   });
@@ -85,12 +86,5 @@ function retryFetch(){
   console.log(defaultAccount); 
   if (defaultAccount == null){
     location.reload();
-  } else{
-     //code to continue with the validation process here
-    authenticate(defaultAccount);
-   }
+  } 
 }
-
- function authenticate(){
-
- }
