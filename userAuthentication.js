@@ -29,7 +29,7 @@ var obj = {
 
     var value = 1;
     if (value == 1) {
-      console.log("Dekhoo", __dirname);
+      // console.log("Dekhoo", __dirname);
       response.sendFile("./views/hello.html", { root: __dirname });
     }
   }

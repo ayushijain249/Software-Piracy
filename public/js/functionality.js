@@ -1,7 +1,8 @@
 window.addEventListener("load", init);
 
 var nodeType = 'geth';
-var address;
+var accounts;
+var defaultAccount;
 
 function init() {
   if (typeof web3 !== 'undefined') {
@@ -38,37 +39,55 @@ function    setWeb3Version() {
   });
 }
 
-function doGetAccounts(){
-  web3.eth.getAccounts(function(error, result){
-    if(error){
-      console.log('accounts count returned an error');
-    } else{
-      console.log(result.length);
-      //result[0] gives the current account
-      console.log(result[0]);
-      address = result[0];
-      //You need to have at least 1 account to proceed
-      if(result.length == 0) {
-        if(nodeType == 'metamask'){
-            alert('Unlock MetaMask and press retry');
-        }
+function doGetAccounts() {
+  web3.eth.getAccounts(function(error, result) {
+    if (error) {
+      console.log("Error---->" + error);
+    } else {
+      accounts = result;
+      console.log("accounts-count" + result.length);
+      // You need to have at least 1 account to proceed
+      if (result.length == 0) {
+        alert("Unlock MetaMask");
         return;
       }
+
+      var coinbase = web3.eth.coinbase;
+
+      console.log("coinbase....." + coinbase);
+      // set the default accounts
+      defaultAccount = web3.eth.defaultAccount;
+
+      console.log("default Account----- >" + defaultAccount);
+      postAccountAddress();
     }
   });
 }
 
-function buttonClicked() {
-   console.log("The value in the textbox is :", userInput.value);
- }
+function postAccountAddress() {
+  $.ajax({
+    type: "POST",
+    url: "/authenticate",
+    timeout: 2000,
+    data: { account: defaultAccount },
+    success: function(data) {
+      //show content
+      alert("Success!");
+    },
+    error: function(jqXHR, textStatus, err) {
+      //show error message
+      alert("text status " + textStatus + ", err " + err);
+    }
+  });
+}
 
 function retryFetch(){
-  console.log(address); 
-  if (address == null){
+  console.log(defaultAccount); 
+  if (defaultAccount == null){
     location.reload();
   } else{
      //code to continue with the validation process here
-    authenticate(address);
+    authenticate(defaultAccount);
    }
 }
 
