@@ -1,5 +1,5 @@
 {
-  "name": "Software-Piracy",
+  "name": "software-piracy",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -23,5 +23,6 @@
     "express": "^4.16.2",
     "isomorphic-fetch": "^2.2.1",
     "nodemon": "^1.14.11"
-  }
+  },
+  "devDependencies": {}
 }

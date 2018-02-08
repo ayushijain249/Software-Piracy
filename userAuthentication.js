@@ -7,7 +7,7 @@ var obj = {
     fetch(
       "http://ropsten.etherscan.io/api?module=account&action=txlist&address=" +
         this.ethAddress +
-        "&startblock=0&endblock=99999999&sort=dsc&apikey=YourApiKeyToken"
+        "&startblock=0&endblock=99999999&sort=dsc&apikey=CHDR8J5WRHST5ERICFH4T5TDR4NAFXSDEZ"
     )
       .then(function(response) {
         if (response.status >= 400) {
