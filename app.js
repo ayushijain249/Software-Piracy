@@ -9,8 +9,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post("/authenticate", (request, response) => {
-  console.log("Request received is :", request.body.userInput);
-  userAuth.authenticate(response);
+  //console.log("Request received is :", request.body.userInput);
+  console.log("Request received is :", request.body.account);
+  userAuth.authenticate(request, response);
 });
 
 app.listen(1234, function() {
