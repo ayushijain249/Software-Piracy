@@ -2,8 +2,8 @@ require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
 var obj = {
-  ethAddress: "0xd2d83b6e889571bb5d8f22f2ff0edfde44db5205",
-  authenticate(response) {
+  ainvyiAddress: "0xf809be2c525fcc878d82c54c942c5a4f7c25b6f2",
+  authenticate(request, response) {
     fetch(
       "http://ropsten.etherscan.io/api?module=account&action=txlist&address=" +
         this.ethAddress +
@@ -16,11 +16,12 @@ var obj = {
         return response.json();
       })
       .then(function(txlist) {
-        //  console.log(txlist);
-        var userFrom = "0xf809be2c525fcc878d82c54c942c5a4f7c25b6f2";
-        var userTo = "0xd2d83b6e889571bb5d8f22f2ff0edfde44db5205";
+        vendorAddress = "0xf809be2c525fcc878d82c54c942c5a4f7c25b6f2";
         for (tx of txlist.result) {
-          if (tx.from === userFrom && tx.to === userTo) {
+          if (
+            tx.from === this.vendorAddress &&
+            tx.to === request.body.account
+          ) {
             console.log("Status", tx.txreceipt_status);
           }
         }
