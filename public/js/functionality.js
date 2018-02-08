@@ -5,6 +5,7 @@ var nodeType = 'geth';
 var address;
 
 function init() {
+  // document.getElementById("submit").disabled = true;
 
   if (typeof web3 !== 'undefined') {
     // Use Mist/MetaMask's provider
@@ -22,10 +23,9 @@ function init() {
   }
 
 
-  var userInput = document.getElementById("userInput");
-
-  var submit = document.getElementById("submit");
-  submit.addEventListener("click", buttonClicked);
+  // var userInput = document.getElementById("userInput");
+  // var submit = document.getElementById("submit");
+  // submit.addEventListener("click", buttonClicked);
 }
 
 function    setWeb3Version() {
@@ -56,6 +56,9 @@ function doGetAccounts(){
       //result[0] gives the current account
       console.log(result[0]);
       address = result[0];
+      if(address!= null){
+        // document.getElementById("submit").disabled = false;
+      }
       //You need to have at least 1 account to proceed
       if(result.length == 0) {
         if(nodeType == 'metamask'){
@@ -71,7 +74,7 @@ function buttonClicked() {
    console.log("The value in the textbox is :", userInput.value);
  }
 
- function retryFetch(){
+function retryFetch(){
   console.log(address); 
   if (address == null){
     //  alert("Unlock MetaMask and press retry")
@@ -80,9 +83,11 @@ function buttonClicked() {
    }
    else{
      //code to continue with the validation process here
+    //  document.getElementById("submit").disabled = false;
+     console.log("chal to ra hai");
      authenticate(address);
    }
- }
+}
 
  function authenticate(){
 
