@@ -17,6 +17,12 @@ app.post("/authenticate", (request, response) => {
   console.log("Request received is :", request.body.account);
   userAuth.authenticate(request, response);
 });
+// ye code hatana hoga maybe...
+app.post("/received", (req, res) => {
+  var HID = req.body.HID;
+  console.log("Data received: " + HID);
+});
+//----yahi tak-------//
 
 app.listen(1234, function() {
   console.log("Server started...");

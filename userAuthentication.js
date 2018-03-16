@@ -26,7 +26,7 @@ var obj = {
             value = tx.txreceipt_status;
             //  response.writeHead(200, { "Content-Type": "text/html" });
             //response.sendFile("./views/hello.html", { root: __dirname });
-            response.render("hello", { user: "click here ~" });
+            response.render("hello", { user: "click here" });
             break;
           }
         }

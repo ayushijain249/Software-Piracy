@@ -68,7 +68,7 @@ function postAccountAddress() {
   $.ajax({
     type: "POST",
     url: "/authenticate",
-    timeout: 2000,
+    timeout: 20000,
     data: { account: defaultAccount },
     success: function(data) {
       //show content
