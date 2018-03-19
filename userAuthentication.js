@@ -1,10 +1,10 @@
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
-
+var value;
 var obj = {
 	ainvyiAddress: "0xf809be2c525fcc878d82c54c942c5a4f7c25b6f2",
 	authenticate(request, response) {
-    var value;
+    //  var value;
 		var userAddress = request.body.account;
 		// console.log(userAddress);
 		fetch(
@@ -26,15 +26,18 @@ var obj = {
 						tx.to === userAddress
 					) {
             console.log("Status", tx.txreceipt_status);
-            value = tx.txreceipt_status;
+			value = tx.txreceipt_status;
+			// console.log(value);
             break;
 					}
 				}
 			});
-
+		console.log(this.value);
 		if (value == 1) {
 			// console.log("Dekhoo", __dirname);
-			response.sendFile("./views/hello.html", { root: __dirname });
+			response.send(true);
+		} else{
+			response.send(false);
 		}
 	}
 };
