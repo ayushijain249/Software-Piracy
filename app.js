@@ -14,12 +14,12 @@ app.set("views", __dirname + "/views");
 
 app.post("/authenticate", (request, response) => {
   //console.log("Request received is :", request.body.userInput);
-  console.log("Request received is :", request.body.address);
+  console.log("Request received is :", request.body);
   userAuth.authenticate(request, response);
 });
 
-app.post("/register",(request,response)=>{
-  console.log("request is : ",request.body.address);
+app.post("/register", (request, response) => {
+  console.log("request is : ", request.body.address);
 });
 
 // ye code hatana hoga maybe...
@@ -30,10 +30,10 @@ app.post("/received", (req, res) => {
 //----yahi tak-------//
 
 app.post("/received", (req, res) => {
-	var HID = req.body.HID;
-	//var fileHash = req.body.fileHash;  
-	console.log("Data has been received, "+HID);//+" & "+fileHash);
-	//decrypt them here and send to contract
+  var HID = req.body.HID;
+  //var fileHash = req.body.fileHash;
+  console.log("Data has been received, " + HID); //+" & "+fileHash);
+  //decrypt them here and send to contract
 });
 
 app.listen(1234, function() {
