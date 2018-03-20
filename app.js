@@ -14,7 +14,7 @@ app.set("views", __dirname + "/views");
 
 app.post("/authenticate", (request, response) => {
   //console.log("Request received is :", request.body.userInput);
-  console.log("Request received is :", request.body.address);
+  console.log("Request received is :", request.body);
   userAuth.authenticate(request, response);
 });
 

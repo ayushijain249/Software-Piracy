@@ -59,11 +59,11 @@ function doGetAccounts() {
       // set the default accounts
       defaultAccount = web3.eth.defaultAccount;
       console.log("default Account----- >" + defaultAccount);
-     // postAccountAddress();
+      document.getElementById("address").value = defaultAccount;
+      // postAccountAddress();
     }
   });
 }
-
 
 function postAccountAddress() {
   $.ajax({
@@ -89,4 +89,3 @@ function retryFetch() {
     location.reload();
   }
 }
-
