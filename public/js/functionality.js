@@ -1,19 +1,19 @@
 window.addEventListener("load", init);
 
-var nodeType = 'geth';
+var nodeType = "geth";
 var accounts;
 var defaultAccount;
 
 function init() {
   document.getElementById("retry").hidden = true;
-  if (typeof web3 !== 'undefined') {
+  if (typeof web3 !== "undefined") {
     // Use Mist/MetaMask's provider
     window.web3 = new Web3(web3.currentProvider);
-    console.log('Seems to be working');
+    console.log("Seems to be working");
     setWeb3Version();
     doGetAccounts();
   } else {
-    console.log('Injected web3 Not Found!!!')
+    console.log("Injected web3 Not Found!!!");
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
     // window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:1234'));
 
@@ -22,21 +22,20 @@ function init() {
   }
 }
 
-function    setWeb3Version() {
-
+function setWeb3Version() {
   var versionJson = {};
 
   // Asynchronous version
-  web3.version.getNode(function(error, result){
-      if(!error){
-          if(result.toLowerCase().includes('metamask')){
-              nodeType = 'metamask';
-          } else if(result.toLowerCase().includes('testrpc')){
-              nodeType = 'testrpc';
-          } else {
-              nodeType = 'geth';
-          }
+  web3.version.getNode(function(error, result) {
+    if (!error) {
+      if (result.toLowerCase().includes("metamask")) {
+        nodeType = "metamask";
+      } else if (result.toLowerCase().includes("testrpc")) {
+        nodeType = "testrpc";
+      } else {
+        nodeType = "geth";
       }
+    }
   });
 }
 
@@ -59,22 +58,23 @@ function doGetAccounts() {
       console.log("coinbase....." + coinbase);
       // set the default accounts
       defaultAccount = web3.eth.defaultAccount;
-     console.log("default Account----- >" + defaultAccount);
-      // postAccountAddress();
+      console.log("default Account----- >" + defaultAccount);
+     // postAccountAddress();
     }
   });
 }
 
 
-method.postAccountAddress = function(){
+function postAccountAddress() {
   $.ajax({
     type: "POST",
     url: "/authenticate",
-    timeout: 2000,
+    timeout: 20000,
     data: { account: defaultAccount },
     success: function(data) {
       //show content
-      alert("Success!");
+      alert("Success!" + data);
+      $("html").html(data);
     },
     error: function(jqXHR, textStatus, err) {
       //show error message
@@ -83,14 +83,10 @@ method.postAccountAddress = function(){
   });
 }
 
-
-
-function retryFetch(){
+function retryFetch() {
   console.log(defaultAccount);
-  console.log(document.getElementById(address).innerHTML);
-  if (defaultAccount == null){
+  if (defaultAccount == null) {
     location.reload();
-  } 
+  }
 }
 
-module.exports=method;
