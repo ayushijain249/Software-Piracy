@@ -39,3 +39,11 @@ app.post("/received", (req, res) => {
 app.listen(1234, function() {
   console.log("Server started...");
 });
+
+//----------database call---//
+
+app.post("/signUp", (request, response) => {
+  console.log("signup called");
+  var newUser = request.body;
+  //userOperations.createUser(newUser, response);
+});
