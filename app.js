@@ -1,6 +1,7 @@
 const express = require("express");
 const userAuth = require("./userAuthentication");
 const bodyParser = require("body-parser");
+const userOperations = require("./db/userOperations");
 const ejs = require("ejs");
 
 const app = express();
@@ -15,11 +16,13 @@ app.set("views", __dirname + "/views");
 app.post("/authenticate", (request, response) => {
   //console.log("Request received is :", request.body.userInput);
   console.log("Request received is :", request.body);
-  userAuth.authenticate(request, response);
+  //userAuth.authenticate(request, response);
 });
 
 app.post("/register", (request, response) => {
-  console.log("request is : ", request.body.address);
+  console.log("request is : ", request.body);
+  var newUser = request.body;
+  userOperations.createUser(newUser, response);
 });
 
 // ye code hatana hoga maybe...
