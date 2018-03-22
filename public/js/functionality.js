@@ -5,7 +5,7 @@ var accounts;
 var defaultAccount;
 
 function init() {
-  document.getElementById("retry").hidden = true;
+  // document.getElementById("retry").hidden = true;
   if (typeof web3 !== "undefined") {
     // Use Mist/MetaMask's provider
     window.web3 = new Web3(web3.currentProvider);
@@ -59,11 +59,11 @@ function doGetAccounts() {
       // set the default accounts
       defaultAccount = web3.eth.defaultAccount;
       console.log("default Account----- >" + defaultAccount);
-     // postAccountAddress();
+      document.getElementById("address").value = defaultAccount;
+      // postAccountAddress();
     }
   });
 }
-
 
 function postAccountAddress() {
   $.ajax({
@@ -89,4 +89,3 @@ function retryFetch() {
     location.reload();
   }
 }
-
