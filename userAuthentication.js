@@ -19,7 +19,7 @@ var obj = {
       })
       .then(function(txlist) {
         console.log(txlist.result);
-        var vendorAddress = "0x81b7e08f65bdf5648606c89998a9cc8164397647";
+        var vendorAddress = "0xa8228b6c1e1a859b80e4d5cd0034c6eb7a22142f";
         for (tx of txlist.result) {
           if (tx.from === vendorAddress && tx.to === userAddress) {
             console.log("Status", tx.txreceipt_status);

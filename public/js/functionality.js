@@ -5,7 +5,7 @@ var accounts;
 var defaultAccount;
 
 function init() {
-  document.getElementById("retry").hidden = true;
+  // document.getElementById("retry").hidden = true;
   if (typeof web3 !== "undefined") {
     // Use Mist/MetaMask's provider
     window.web3 = new Web3(web3.currentProvider);
