@@ -14,6 +14,4 @@ var userOperations = {
   }
 };
 
-//userOperations.createUser({ name: "Karan Khanna" });
-
 module.exports = userOperations;
