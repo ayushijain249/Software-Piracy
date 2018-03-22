@@ -25,19 +25,22 @@ app.post("/register", (request, response) => {
   userOperations.createUser(newUser, response);
 });
 
-// ye code hatana hoga maybe...
-app.post("/received", (req, res) => {
+// ye code nahi hatana hoga ...
+app.post("/loginClient", (req, res) =>{
+  var email = req.body.email;
+  var password = req.body.password;
   var HID = req.body.HID;
-  console.log("Data received: " + HID);
+  console.log(`\nEmail: ${email}\nPassword: ${password}\nHID: ${HID}`);
+  // yaha database checking ka code likho
+  //check from database and then:
+  var valid = "Yes";// Yes for valid and No for invalid.
+  res.write(valid,() => {
+    console.log(valid);
+  });
+  //aage ka code yaha pe
+  console.log(res.connection.address());
 });
-//----yahi tak-------//
-
-app.post("/received", (req, res) => {
-  var HID = req.body.HID;
-  //var fileHash = req.body.fileHash;
-  console.log("Data has been received, " + HID); //+" & "+fileHash);
-  //decrypt them here and send to contract
-});
+// edwin ka code khatam
 
 app.listen(1234, function() {
   console.log("Server started...");
