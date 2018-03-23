@@ -26,15 +26,18 @@ app.post("/register", (request, response) => {
 });
 
 // ye code nahi hatana hoga ...
-app.post("/loginClient", (req, res) =>{
+app.post("/loginClient", (req, res) => {
   var email = req.body.email;
   var password = req.body.password;
   var HID = req.body.HID;
   console.log(`\nEmail: ${email}\nPassword: ${password}\nHID: ${HID}`);
-  // yaha database checking ka code likho
+
+  //verify user form database
+  userOperations.verifyUser({ email: email, password: password });
+
   //check from database and then:
-  var valid = "Yes";// Yes for valid and No for invalid.
-  res.write(valid,() => {
+  var valid = "Yes"; // Yes for valid and No for invalid.
+  res.write(valid, () => {
     console.log(valid);
   });
   //aage ka code yaha pe
@@ -44,12 +47,4 @@ app.post("/loginClient", (req, res) =>{
 
 app.listen(1234, function() {
   console.log("Server started...");
-});
-
-//----------database call---//
-
-app.post("/signUp", (request, response) => {
-  console.log("signup called");
-  var newUser = request.body;
-  //userOperations.createUser(newUser, response);
 });
