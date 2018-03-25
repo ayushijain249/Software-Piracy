@@ -25,6 +25,11 @@ app.post("/register", (request, response) => {
   userOperations.createUser(newUser, response);
 });
 
+app.post("/emailCheck", (request, response) => {
+  console.log(request.body);
+  userOperations.checkEmail(request.body.email, response);
+});
+
 // ye code nahi hatana hoga ...
 app.post("/loginClient", (req, res) => {
   var email = req.body.email;
@@ -33,15 +38,15 @@ app.post("/loginClient", (req, res) => {
   console.log(`\nEmail: ${email}\nPassword: ${password}\nHID: ${HID}`);
 
   //verify user form database
-  userOperations.verifyUser({ email: email, password: password });
+  userOperations.verifyUser({ email: email, password: password }, res);
 
   //check from database and then:
   var valid = "Yes"; // Yes for valid and No for invalid.
-  res.write(valid, () => {
+  /*res.write(valid, () => {
     console.log(valid);
-  });
+  });*/
   //aage ka code yaha pe
-  console.log(res.connection.address());
+  //console.log(res.connection.address());
 });
 // edwin ka code khatam
 
