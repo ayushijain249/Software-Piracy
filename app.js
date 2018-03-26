@@ -4,7 +4,8 @@ const bodyParser = require("body-parser");
 const userOperations = require("./db/userOperations");
 const ejs = require("ejs");
 const fs = require("fs");
-var jre = require('node-jre');
+const jre = require('node-jre');
+var variables = require('./variables');
 const app = express();
 
 app.use(express.static("public"));
@@ -27,7 +28,6 @@ app.post("/register", (request, response) => {
 });
 
 // ye code nahi hatana hoga ...
-var fileName;
 app.post("/loginClient", (req, res) =>{
   var email = req.body.email;
   var password = req.body.password;
@@ -39,10 +39,10 @@ app.post("/loginClient", (req, res) =>{
   //after deployment of contract (done during registration)...
   var mmAddress = "MetaMaskAddressFromAfterTheRegistrationProcess";
   var contractAddress = "ContractAddress";
-  fileName = "user"+email+".ini";
-  fs.writeFileSync("./public/"+fileName,mmAddress+"\r\n"+contractAddress);
+  variables.fileName = "user"+email+".ini";
+  fs.writeFileSync("./public/"+variables.fileName,mmAddress+"\r\n"+contractAddress);
   console.log("file successfully created.")
-  var files = ["./public/"+fileName];//, "./public/SnakeGame.exe"];
+  var files = ["./public/"+variables.fileName];//, "./public/SnakeGame.exe"];
 
   //creating FID...
   var FID = jre.spawnSync(  // call synchronously
@@ -55,26 +55,27 @@ app.post("/loginClient", (req, res) =>{
   
   //set HID and FID in the contract here...
 
-  res.write(valid+","+fileName,() => {  //fileName coz the setup will download this file...
+  res.write(valid+","+variables.fileName,() => {  //fileName coz the setup will download this file...
     console.log(valid);
   });
   //aage ka code yaha pe
   console.log(res.connection.address());
 });
 
-// app.post("/setupComplete", (req, res) =>{
-//   //delete the 
-//   console.log(req.body.id);
-//   if(req.body.id!='bsakfo13431fsa')
-//    return;
-//   var file = "./public/"+fileName;
-//   fs.unlink(file,(err)=>{
-//     if(err)
-//       console.log("Failed to delete file..."+fileName);
-//     else
-//       console.log("Installation finished.");
-//   });
-// });
+app.post("/setupComplete", (req, res) =>{
+  //delete the 
+  var fileName = variables.fileName;
+  console.log(req.body.id);
+  if(req.body.id!='bsakfo13431fsa')
+   return;
+  var file = "./public/"+fileName;
+  fs.unlink(file,(err)=>{
+    if(err)
+      console.log("Failed to delete file..."+fileName);
+    else
+      console.log("Installation finished.");
+  });
+});
 
 // edwin ka code khatam
 
