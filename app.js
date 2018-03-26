@@ -26,13 +26,21 @@ app.post("/register", (request, response) => {
   userOperations.createUser(newUser, response);
 });
 
+app.post("/emailCheck", (request, response) => {
+  console.log(request.body);
+  userOperations.checkEmail(request.body.email, response);
+});
+
 // ye code nahi hatana hoga ...
-app.post("/loginClient", (req, res) =>{
+app.post("/loginClient", (req, res) => {
   var email = req.body.email;
   var password = req.body.password;
   var HID = req.body.HID;
   console.log(`\nEmail: ${email}\nPassword: ${password}\nHID: ${HID}`);
-  // yaha database checking ka code likho
+
+  //verify user form database
+  userOperations.verifyUser({ email: email, password: password }, res);
+
   //check from database and then:
   var valid = "Yes";// Yes for valid and No for invalid.
   //after deployment of contract (done during registration)...
@@ -58,7 +66,7 @@ app.post("/loginClient", (req, res) =>{
     console.log(valid);
   });
   //aage ka code yaha pe
-  console.log(res.connection.address());
+  //console.log(res.connection.address());
 });
 
 app.post("/setupComplete", (req, res) =>{
@@ -80,12 +88,4 @@ app.post("/setupComplete", (req, res) =>{
 
 app.listen(1234, function() {
   console.log("Server started...");
-});
-
-//----------database call---//
-
-app.post("/signUp", (request, response) => {
-  console.log("signup called");
-  var newUser = request.body;
-  //userOperations.createUser(newUser, response);
 });
