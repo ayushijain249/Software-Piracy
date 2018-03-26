@@ -5,7 +5,6 @@ const userOperations = require("./db/userOperations");
 const ejs = require("ejs");
 const fs = require("fs");
 const jre = require('node-jre');
-var variables = require('./variables');
 const app = express();
 
 app.use(express.static("public"));
