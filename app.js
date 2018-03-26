@@ -39,10 +39,10 @@ app.post("/loginClient", (req, res) =>{
   //after deployment of contract (done during registration)...
   var mmAddress = "MetaMaskAddressFromAfterTheRegistrationProcess";
   var contractAddress = "ContractAddress";
-  variables.fileName = "user"+email+".ini";
-  fs.writeFileSync("./public/"+variables.fileName,mmAddress+"\r\n"+contractAddress);
+  var fileName = "user"+email+".ini";
+  fs.writeFileSync("./public/"+fileName,mmAddress+"\r\n"+contractAddress);
   console.log("file successfully created.")
-  var files = ["./public/"+variables.fileName];//, "./public/SnakeGame.exe"];
+  var files = ["./public/"+fileName];//, "./public/SnakeGame.exe"];
 
   //creating FID...
   var FID = jre.spawnSync(  // call synchronously
@@ -64,7 +64,7 @@ app.post("/loginClient", (req, res) =>{
 
 app.post("/setupComplete", (req, res) =>{
   //delete the 
-  var fileName = variables.fileName;
+  var fileName = "user"+req.body.email+".ini";
   console.log(req.body.id);
   if(req.body.id!='bsakfo13431fsa')
    return;
