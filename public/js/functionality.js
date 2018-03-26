@@ -65,27 +65,90 @@ function doGetAccounts() {
   });
 }
 
-function postAccountAddress() {
+function checkEmail() {
+  document.getElementById("emailverify").hidden = true;
+  document.getElementById("emailerror").hidden = true;
+  var emailId = document.getElementById("email").value;
+
   $.ajax({
     type: "POST",
-    url: "/authenticate",
+    url: "http://localhost:1234/emailCheck",
     timeout: 20000,
-    data: { account: defaultAccount },
-    success: function(data) {
-      //show content
-      alert("Success!" + data);
-      $("html").html(data);
+    data: { email: emailId },
+    statusCode: {
+      200: function(data) {
+        $("#emailverify").html("Email is verified.");
+        document.getElementById("emailverify").hidden = false;
+      },
+      400: function(data) {
+        $("#emailerror").html("Email id already exist...Try again.");
+        document.getElementById("emailerror").hidden = false;
+        $("#email").value = "";
+      },
+      500: function(data) {
+        alert("500-->" + data.message);
+        console.log("500--->" + data.message);
+        $("#error").html(
+          "Some error occured while verifying...Internal Server Error.Click on retry button above."
+        );
+        document.getElementById("error").hidden = false;
+        document.getElementById("retry").hidden = false;
+        $("#email").value = "";
+      }
     },
-    error: function(jqXHR, textStatus, err) {
-      //show error message
-      alert("text status " + textStatus + ", err " + err);
+    success: function(data) {
+      // alert("email is verified...");
+    },
+    error: function(data) {
+      //alert("email is duplicate...");
+    }
+  });
+}
+
+function postAccountAddress() {
+  console.log("Its in postAccountAddress");
+  $.ajax({
+    type: "POST",
+    url: "http://localhost:1234/register",
+    timeout: 20000,
+    data: $("#registerForm").serialize(),
+    statusCode: {
+      201: function(data) {
+        alert(data.message);
+        console.log("201--->" + data.message);
+        window.location = "http://localhost:1234/downloader.html";
+      },
+      400: function(data) {
+        alert("400-->" + data.message);
+        console.log("400--->" + data.message);
+        $("#emailerror").html(
+          "Email id already exist...Try with other id.Click on retry button above."
+        );
+        document.getElementById("emailerror").hidden = false;
+        document.getElementById("retry").hidden = false;
+      },
+      500: function(data) {
+        alert("500-->" + data.message);
+        console.log("500--->" + data.message);
+        $("#error").html(
+          "Some error occured while registering...Internal Server Error.Click on retry button above."
+        );
+        document.getElementById("error").hidden = false;
+        document.getElementById("retry").hidden = false;
+      },
+      success: function(data) {
+        console.log("success");
+        //$("html").html(data);
+      },
+      error: function(jqXHR, textStatus, err) {
+        //show error message
+        console.log(jqXHR);
+        alert("text status " + textStatus + ", err " + err);
+      }
     }
   });
 }
 
 function retryFetch() {
-  console.log(defaultAccount);
-  if (defaultAccount == null) {
-    location.reload();
-  }
+  location.reload(true);
 }

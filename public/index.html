@@ -92,6 +92,15 @@
         display: table;
     }
 
+    p#emailerror,
+    #error {
+        color: #f44336
+    }
+
+    p#emailverify {
+        color: #4CAF50
+    }
+
     /* Change styles for cancel button and signup button on extra small screens */
 
     @media screen and (max-width: 300px) {
@@ -99,13 +108,15 @@
         .signupbtn {
             width: 100%;
         }
+
+
     }
 </style>
 
 <body>
     <button class="btn" name="retry button" type="retry" id="retry" onclick="retryFetch()" hidden>Retry</button>
 
-    <form action="/register" method="post" style="border:1px solid #ccc">
+    <form id="registerForm" method="post" style="border:1px solid #ccc">
         <div class="container">
             <h1>Registration</h1>
             <p>Please fill in this form to register your product.</p>
@@ -124,8 +135,9 @@
             <label for="email">
                 <b>Email</b>
             </label>
-            <input type="email" placeholder="Enter Email" name="email" required>
-
+            <input id="email" type="email" placeholder="Enter Email" name="email" onchange="checkEmail()" required>
+            <p id="emailerror" hidden></p>
+            <p id="emailverify" hidden></p>
             <label for="password">
                 <b>Password</b>
             </label>
@@ -145,10 +157,10 @@
 
             <p>By registering you agree to our
                 <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
-
+            <p id="error" hidden></p>
             <div class="clearfix">
                 <button type="button" class="cancelbtn">Cancel</button>
-                <button type="submit" class="signupbtn">Submit</button>
+                <button type="button" onclick="postAccountAddress()" class="signupbtn">Submit</button>
             </div>
         </div>
     </form>
