@@ -1,7 +1,7 @@
-const solc = require('solc');
-const Web3 = require('web3');
 
-	console.log("Running Somethingoutside ");
+let Web3=require('web3');
+let solc=require('solc');
+console.log("Running Somethingoutside ");
 
 
 var methods={};
