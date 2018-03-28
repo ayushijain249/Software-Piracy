@@ -3,7 +3,8 @@ const userAuth = require("./userAuthentication");
 const bodyParser = require("body-parser");
 const userOperations = require("./db/userOperations");
 const ejs = require("ejs");
-
+const fs = require("fs");
+const jre = require('node-jre');
 const app = express();
 
 app.use(express.static("public"));
@@ -37,17 +38,52 @@ app.post("/loginClient", (req, res) => {
   var HID = req.body.HID;
   console.log(`\nEmail: ${email}\nPassword: ${password}\nHID: ${HID}`);
 
-  //verify user form database
+  //verify user from database
   userOperations.verifyUser({ email: email, password: password }, res);
 
   //check from database and then:
-  var valid = "Yes"; // Yes for valid and No for invalid.
-  /*res.write(valid, () => {
-    console.log(valid);
-  });*/
+  var valid = "Yes";// Yes for valid and No for invalid.
+  //after deployment of contract (done during registration)...
+  var mmAddress = "MetaMaskAddressFromAfterTheRegistrationProcess";
+  var contractAddress = "ContractAddress";
+  var fileName = "user"+email+".ini";
+  fs.writeFileSync("./public/"+fileName,mmAddress+"\r\n"+contractAddress);
+  console.log("file successfully created.")
+  var files = ["./public/"+fileName];//, "./public/SnakeGame.exe"];
+
+  //creating FID...
+  var FID = jre.spawnSync(  // call synchronously
+    ['java'],                // add the relative directory 'java' to the class-path
+    'FID',                 // call main routine in class 'FID'
+    files,               // pass files as parameters
+    { encoding: 'utf8' }     // encode output as string
+  ).stdout.trim();           // take output from stdout as trimmed String
+  console.log("FID: "+FID);
+  
+  //set HID and FID in the contract here...
+
+  // res.write(valid,() => {  //fileName coz the setup will download this file...
+  //   console.log(valid);
+  // });
   //aage ka code yaha pe
   //console.log(res.connection.address());
 });
+
+app.post("/setupComplete", (req, res) =>{
+  //delete the 
+  var fileName = "user"+req.body.email+".ini";
+  console.log(req.body.id);
+  if(req.body.id!='bsakfo13431fsa')
+   return;
+  var file = "./public/"+fileName;
+  fs.unlink(file,(err)=>{
+    if(err)
+      console.log("Failed to delete file..."+fileName);
+    else
+      console.log("Installation finished.");
+  });
+});
+
 // edwin ka code khatam
 
 app.listen(1234, function() {
