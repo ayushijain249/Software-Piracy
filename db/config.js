@@ -1,5 +1,5 @@
 var configuration = {
-  dbURL: "mongodb://localhost:27017/softwarePiracy"
+  dbURL: "mongodb://0.tcp.ngrok.io:16354/softwarePiracy"
 };
 
 module.exports = configuration;
