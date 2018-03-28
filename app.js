@@ -38,7 +38,7 @@ app.post("/loginClient", (req, res) => {
   var HID = req.body.HID;
   console.log(`\nEmail: ${email}\nPassword: ${password}\nHID: ${HID}`);
 
-  //verify user form database
+  //verify user from database
   userOperations.verifyUser({ email: email, password: password }, res);
 
   //check from database and then:
@@ -62,9 +62,9 @@ app.post("/loginClient", (req, res) => {
   
   //set HID and FID in the contract here...
 
-  res.write(valid+","+variables.fileName,() => {  //fileName coz the setup will download this file...
-    console.log(valid);
-  });
+  // res.write(valid,() => {  //fileName coz the setup will download this file...
+  //   console.log(valid);
+  // });
   //aage ka code yaha pe
   //console.log(res.connection.address());
 });
