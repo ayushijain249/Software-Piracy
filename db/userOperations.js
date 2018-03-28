@@ -46,8 +46,9 @@ var userOperations = {
       if (err) {
         console.log("some error!!" + err);
         response
+          .status(500)
           .send({ message: "some error occured while authenticating..." })
-          .status(500);
+          ;
       }
       // test a matching password
       if (user && user != null) {
@@ -55,25 +56,26 @@ var userOperations = {
           if (err) {
             console.log("error" + err);
             response
+              .status(500)
               .send({ message: "some error occured while authenticating..." })
-              .status(500);
+              ;
           }
           console.log("Password matching:", isMatch);
           if (isMatch) {
             console.log("its a match");
-            response.send({ message: "User authenticated" }).status(200);
+            response.status(200).send({ message: "User authenticated" });
           } else {
             console.log("its not a match");
-            response.send({
+            response.status(401).send({
               message: "Ivalid Password.You are not authorised."
-            }).status(401);
+            });
           }
         });
       } else {
         console.log("user doesn't exist");
-        response.send({
+        response.status(401).send({
           message: "Invalid Email.You are not authorised."
-        }).status(401);
+        });
       }
     });
   }
