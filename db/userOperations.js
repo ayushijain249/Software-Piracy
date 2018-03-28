@@ -47,8 +47,7 @@ var userOperations = {
         console.log("some error!!" + err);
         response
           .status(500)
-          .send({ message: "some error occured while authenticating..." })
-          ;
+          .send({ message: "some error occured while authenticating..." });
       }
       // test a matching password
       if (user && user != null) {
@@ -57,8 +56,7 @@ var userOperations = {
             console.log("error" + err);
             response
               .status(500)
-              .send({ message: "some error occured while authenticating..." })
-              ;
+              .send({ message: "some error occured while authenticating..." });
           }
           console.log("Password matching:", isMatch);
           if (isMatch) {

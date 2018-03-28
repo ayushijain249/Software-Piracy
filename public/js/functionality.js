@@ -81,19 +81,21 @@ function checkEmail() {
         document.getElementById("emailverify").hidden = false;
       },
       400: function(data) {
+        console.log("400--->" + data.responseText);
+
         $("#emailerror").html("Email id already exist...Try again.");
         document.getElementById("emailerror").hidden = false;
-        $("#email").value = "";
+        document.getElementById("email").value = "";
       },
       500: function(data) {
-        alert("500-->" + data.message);
-        console.log("500--->" + data.message);
+        alert("500-->" + data.responseText);
+        console.log("500--->" + data.responseText);
         $("#error").html(
           "Some error occured while verifying...Internal Server Error.Click on retry button above."
         );
         document.getElementById("error").hidden = false;
         document.getElementById("retry").hidden = false;
-        $("#email").value = "";
+        document.getElementById("email").value = "";
       }
     },
     success: function(data) {
