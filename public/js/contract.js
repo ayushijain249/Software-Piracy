@@ -8,8 +8,8 @@ function deployContract()    {
 
     
     console.log("in deploy contract method");
-    //if (typeof web3 !== 'undefined') {
-    if(false){  
+    if (typeof web3 !== 'undefined') {
+   // if(false){  
     web3 = new Web3(web3.currentProvider);
       console.log('-------MetaMask Login-----------');
       //web3.personal.unlockAccount("web3.eth.coinbase"+web3.eth.coinbase);
@@ -39,15 +39,14 @@ function deployContract()    {
       
 //        console.log(flattenSource(source));
         const source = "pragma solidity ^0.4.6; contract TransactionVerify"+"{"+"}";
- 
-        web3.eth.compile.solidity(source, function(error, result){
-    
+ var compiled_code=web3.eth.compile.solidity(source, function(error, result){
+    console.log("In the compilation");
             if(error){
-                console.log(error);
+                console.log("Compilation error="+error);
               //  setData('compilation_result',error,true);
             } else {
                 // This is an issue seen only on windows - solc compile binary - ignore
-                //result = compileResultWindowsHack(result);
+                result = compileResultWindowsHack(result);
                 console.log('Compilation Result=',JSON.stringify(result));
                 for(var prop in result){
                     contract_1 = prop;
@@ -128,8 +127,15 @@ function deployContract()    {
             }
         });
     }
+    function    compileResultWindowsHack(result){
+        var cleaned = {}
+        for(var prop in result){
+            var newProp = prop.replace('<stdin>:','');
+            cleaned[newProp] = result[prop];
+        }
+        return cleaned;
+    }
     
-
 
 
 
