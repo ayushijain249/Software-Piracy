@@ -1,36 +1,36 @@
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
-
+var value;
 var obj = {
-  ethAddress: "0xd2d83b6e889571bb5d8f22f2ff0edfde44db5205",
-  authenticate(response) {
+  ainvyiAddress: "0xf809be2c525fcc878d82c54c942c5a4f7c25b6f2",
+  authenticate(request, response) {
+    var userAddress = request.body.address;
+    console.log(userAddress);
     fetch(
       "http://ropsten.etherscan.io/api?module=account&action=txlist&address=" +
-        this.ethAddress +
-        "&startblock=0&endblock=99999999&sort=dsc&apikey=YourApiKeyToken"
+        request.body.address +
+        "&startblock=0&endblock=latest&sort=dsc&apikey=CHDR8J5WRHST5ERICFH4T5TDR4NAFXSDEZ"
     )
-      .then(function(response) {
-        if (response.status >= 400) {
+      .then(function(data) {
+        if (data.status >= 400) {
           throw new Error("Bad response from server");
         }
-        return response.json();
+        return data.json();
       })
       .then(function(txlist) {
-        //  console.log(txlist);
-        var userFrom = "0xf809be2c525fcc878d82c54c942c5a4f7c25b6f2";
-        var userTo = "0xd2d83b6e889571bb5d8f22f2ff0edfde44db5205";
+        console.log(txlist.result);
+        var vendorAddress = "0xa8228b6c1e1a859b80e4d5cd0034c6eb7a22142f";
         for (tx of txlist.result) {
-          if (tx.from === userFrom && tx.to === userTo) {
+          if (tx.from === vendorAddress && tx.to === userAddress) {
             console.log("Status", tx.txreceipt_status);
+            value = tx.txreceipt_status;
+            //  response.writeHead(200, { "Content-Type": "text/html" });
+            //response.sendFile("./views/hello.html", { root: __dirname });
+            response.render("hello", { user: "click here" });
+            break;
           }
         }
       });
-
-    var value = 1;
-    if (value == 1) {
-      console.log("Dekhoo", __dirname);
-      response.sendFile("./views/hello.html", { root: __dirname });
-    }
   }
 };
 

@@ -1,5 +1,5 @@
 {
-  "name": "Software-Piracy",
+  "name": "software-piracy",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -18,18 +18,16 @@
   },
   "homepage": "https://github.com/ayushijain249/Software-Piracy#readme",
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
-    "bower": "^1.8.2",
-    "code": "^5.1.2",
+    "ejs": "^2.5.7",
     "es6-promise": "^4.2.4",
     "express": "^4.16.2",
-    "info": "^1.0.0",
     "isomorphic-fetch": "^2.2.1",
-    "nodejs": "0.0.0",
-    "nodemon": "^1.14.11",
-    "solc": "^0.4.21",
-    "web3": "^1.0.0-beta.29",
-    "web3-core": "^1.0.0-beta.31",
-    "web3-core-requestmanager": "^1.0.0-beta.31"
-  }
+    "js-sha256": "^0.9.0",
+    "mongoose": "^5.0.10",
+    "node-jre": "^0.2.3",
+    "nodemon": "^1.14.11"
+  },
+  "devDependencies": {}
 }
