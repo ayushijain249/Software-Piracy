@@ -1,7 +1,7 @@
 var users = require("./userSchema");
 
 var userOperations = {
-  createUser: function(newUser, response) {
+  createUser: function(newUser, response, isSuccess) {
     let userToSave = new users(newUser);
     userToSave.save((err, doc) => {
       if (err) {
@@ -11,14 +11,17 @@ var userOperations = {
           response.status(400).send({
             message: "email id already exists.Enter unique email id."
           });
+          return isSuccess(0);
         } else
           response
             .status(500)
             .send({ message: "some error occured while registering..." });
+        return isSuccess(0);
       } else {
         console.log(`Registered User.. :-)`, doc);
         //response.send({ accessToken: "customer", userDetails: doc });
         response.status(201).send({ message: "user registered succesfully." });
+        return isSuccess(1);
       }
     });
   },
