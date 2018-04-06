@@ -75,11 +75,16 @@ function fetchDeployedContracts() {
 
 function updateContractList() {
   var str = "<ul>";
-  for (i in contractsData) {
+  console.log(JSON.stringify("updateContractList++++++++++++" + contractsData));
+  for (let i in contractsData) {
+    console.log("contracts data-----" + JSON.stringify(contractsData[i]));
     str +=
       "<li>" +
       contractsData[i].email +
-      "<button id='contractsData[i].email' onClick=deployContract(contractsData[i])>Deploy</button></li>";
+      contractsData[i].abi.constant +
+      `<button id='${
+        contractsData[i].email
+      }' onClick="deployContract('${i}')">Deploy</button></li>`;
   }
   str += "</ul>";
 
@@ -90,16 +95,16 @@ function updateContractList() {
     str1 +=
       "<li>" +
       deployedContractsData[i].email +
-      "<button onClick=setContractValue(deployedContractsData[i])>SET DATA</button></li>";
+      `<button onClick=setContractValue('${i}')>SET DATA</button></li>`;
   }
   str1 += "</ul>";
   $("#setValues").append(str1);
 }
 
-function deployContract(data) {
-  console.log("in deploy contract method");
-
-  var testerContract = web3.eth.contract(JSON.parse(data.abi));
+function deployContract(index) {
+  data = contractsData[index];
+  console.log("Data = > ", data);
+  var testerContract = web3.eth.contract(data.abi);
   console.log(testerContract);
   var byteCode = "0x" + data.byteCode;
   var tester = testerContract.new(
@@ -153,101 +158,66 @@ function sendContractAddress(emailId, contractAdd) {
   });
 }
 
-function setContractValue(data) {
+function setContractValue(index) {
+  data = deployedContractsData[index];
   console.log("in set value method..." + JSON.stringify(data));
-
-  var contract = web3.eth.contract([
-    {
-      constant: false,
-      inputs: [
-        {
-          name: "y",
-          type: "uint256"
-        }
-      ],
-      name: "setX",
-      outputs: [],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      constant: true,
-      inputs: [],
-      name: "getX",
-      outputs: [
-        {
-          name: "",
-          type: "uint256"
-        }
-      ],
-      payable: false,
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      constant: true,
-      inputs: [],
-      name: "gety",
-      outputs: [
-        {
-          name: "",
-          type: "uint256"
-        }
-      ],
-      payable: false,
-      stateMutability: "view",
-      type: "function"
-    }
-  ]);
-
-  /*var byteCode = "0x" + data.byteCode;
-  var tester = contract.new(
-    {
-      from: web3.eth.accounts[0],
-      data:
-        "0x6060604052341561000f57600080fd5b61010c8061001e6000396000f3006060604052600436106053576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680634018d9aa1460585780635197c7aa146078578063807b4c3314609e575b600080fd5b3415606257600080fd5b6076600480803590602001909190505060c4565b005b3415608257600080fd5b608860ce565b6040518082815260200191505060405180910390f35b341560a857600080fd5b60ae60d7565b6040518082815260200191505060405180910390f35b8060008190555050565b60008054905090565b600080549050905600a165627a7a723058205391644a0754700c2764e58f906555ac82b280526691965f0ea0742ccb48cb6d0029",
-      gas: "3500000"
-    },
-    function(e, contract) {
-      console.log(e, contract);
-      if (typeof contract.address !== "undefined") {
-        console.log(
-          "Contract mined! address: " +
-            contract.address +
-            " transactionHash: " +
-            contract.transactionHash
-        );
-      }
-    }
-  );
-*/
+  var contract = web3.eth.contract(data.abi);
   var add = data.contractAddress;
-  var contractAtAddress = contract.at(
-    "0xb6b365d1c58a9535913d7eebbe198ac4475a3af7"
-  );
+  var contractAtAddress = contract.at(add);
   var gas = 4000000;
   var value = {
     from: web3.eth.accounts[0],
     gas: gas
   };
-  /* contractAtAddress.setSoftwareHash(data.fid, value, function(error, result) {
-    if (!error) console.log("result of setsoftwarehash method=" + result);
-    else console.log("error=" + error);
+
+  let count = 0;
+  contractAtAddress.getSoftwareHash(value, function(error, result) {
+    if (!error) {
+      console.log("result of setsoftwarehash method=" + result);
+      count++;
+      if (count == 5) {
+        sendContractValueSetStatus(data.email);
+      }
+    } else console.log("error=" + error);
   });
 
-  contractAtAddress.setHID(data.hid, value, function(error, result) {
-    if (!error) console.log("result of sethid method=" + result);
-    else console.log(" error=" + error);
+  contractAtAddress.getHID(value, function(error, result) {
+    if (!error) {
+      console.log("result of sethid method=" + result);
+      count++;
+
+      if (count == 5) {
+        sendContractValueSetStatus(data.email);
+      }
+    } else console.log(" error=" + error);
   });
-*/
-  console.log(
-    "getting value--->" +
-      contractAtAddress.getX(value, function(error, result) {
-        if (!error) console.log("result of gethid method=" + result);
-        else console.log("error=" + error);
-      })
-  );
 }
 
-function get() {}
+function sendContractValueSetStatus(emailId) {
+  var sendData = {
+    email: emailId
+  };
+  console.log(sendData.email);
+  $.ajax({
+    type: "POST",
+    url: "http://localhost:1234/contractValuesSet",
+    timeout: 20000,
+    data: sendData,
+    statusCode: {
+      200: function(data) {
+        console.log(data);
+        alert(data);
+        location.reload(true);
+      },
+      400: function(data) {
+        console.log("400--->" + data.responseText);
+      },
+      500: function(data) {
+        alert("500-->" + data.responseText);
+        console.log("500--->" + data.responseText);
+      }
+    },
+    success: function(data) {},
+    error: function(data) {}
+  });
+}

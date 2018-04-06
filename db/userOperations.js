@@ -44,13 +44,14 @@ var userOperations = {
       }
     });
   },
-  verifyUser: function(oldUser, response) {
+  verifyUser: function(oldUser, response, statusCode) {
     users.findOne({ email: oldUser.email }, function(err, user) {
       if (err) {
         console.log("some error!!" + err);
         response
           .status(500)
           .send({ message: "some error occured while authenticating..." });
+        return statusCode(500);
       }
       // test a matching password
       if (user && user != null) {
@@ -60,16 +61,19 @@ var userOperations = {
             response
               .status(500)
               .send({ message: "some error occured while authenticating..." });
+            return statusCode(500);
           }
           console.log("Password matching:", isMatch);
           if (isMatch) {
             console.log("its a match");
-            response.status(200).send({ message: "User authenticated" });
+            //response.status(200).send({ message: "User authenticated" });
+            return statusCode(200);
           } else {
             console.log("its not a match");
             response.status(401).send({
               message: "Ivalid Password.You are not authorised."
             });
+            return statusCode(401);
           }
         });
       } else {
@@ -77,6 +81,20 @@ var userOperations = {
         response.status(401).send({
           message: "Invalid Email.You are not authorised."
         });
+        return statusCode(401);
+      }
+    });
+  },
+  fetchEthAddress: function(emailId, result) {
+    users.findOne({ email: emailId }, function(err, user) {
+      if (err) {
+        console.log("Some Error--->" + err);
+        result(500, "Error");
+      }
+      if (user && user != null) {
+        result(200, user.ethAddress);
+      } else {
+        result(400, "user not found...");
       }
     });
   }

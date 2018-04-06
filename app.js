@@ -25,7 +25,7 @@ app.post("/authenticate", (request, response) => {
 app.post("/register", (request, response) => {
   console.log("request is : ", request.body);
   var newUser = request.body;
-  var isSuccess = userOperations.createUser(newUser, response, result => {
+  userOperations.createUser(newUser, response, result => {
     if (result == 1) {
       console.log(request.body.ethAddress);
       var contractData = contract.compile(request.body.ethAddress);
@@ -91,48 +91,80 @@ app.post("/loginClient", (req, res) => {
   console.log(`\nEmail: ${email}\nPassword: ${password}\nHID: ${HID}`);
 
   //verify user from database
-  userOperations.verifyUser({ email: email, password: password }, res);
+  userOperations.verifyUser(
+    { email: email, password: password },
+    res,
+    result => {
+      if (result == 200) {
+        //check from database and then:
+        var valid = "Yes"; // Yes for valid and No for invalid.
+        //after deployment of contract (done during registration)...
+        var mmAddress;
+        var contractAddress;
+        userOperations.fetchEthAddress(email, (status, value) => {
+          if (status == 200) {
+            mmAddress = value;
 
-  //check from database and then:
-  var valid = "Yes"; // Yes for valid and No for invalid.
-  //after deployment of contract (done during registration)...
-  var mmAddress = "MetaMaskAddressFromAfterTheRegistrationProcess";
-  var contractAddress = "ContractAddress";
-  var fileName = "user" + email + ".ini";
-  fs.writeFileSync(
-    "./public/" + fileName,
-    mmAddress + "\r\n" + contractAddress
+            contractOperations.fetchContractAddress(email, (status, value) => {
+              if (status == 200) {
+                contractAddress = value;
+
+                /*creating user specific file*/
+                var fileName = "user" + email + ".ini";
+                fs.writeFileSync(
+                  "./public/" + fileName,
+                  mmAddress + "\r\n" + contractAddress
+                );
+                console.log("file successfully created.");
+                var files = ["./public/" + fileName]; //, "./public/SnakeGame.exe"];
+
+                //creating FID...
+                var FID = jre
+                  .spawnSync(
+                    // call synchronously
+                    ["java"], // add the relative directory 'java' to the class-path
+                    "FID", // call main routine in class 'FID'
+                    files, // pass files as parameters
+                    { encoding: "utf8" } // encode output as string
+                  )
+                  .stdout.trim(); // take output from stdout as trimmed String
+                console.log("FID: " + FID);
+
+                //set HID and FID in the contract here...
+                var updates = {
+                  hid: HID,
+                  fid: FID,
+                  isValuesReceived: true
+                };
+                contractOperations.updateData(email, updates, response => {
+                  if (response == 1) {
+                    console.log("user hid updated in db");
+                    res.status(200).send({ message: "User authenticated" });
+                  } else {
+                    console.log("user hid not updated ");
+                    res.status(500).send({
+                      message: "some error occured while authenticating..."
+                    });
+                  }
+                });
+                //////////////////////////////
+              } else {
+                console.log("some error occured...");
+                res.status(500).send({
+                  message: "some error occured while authenticating..."
+                });
+              }
+            });
+          } else {
+            console.log("some error occured...");
+            res
+              .status(500)
+              .send({ message: "some error occured while authenticating..." });
+          }
+        });
+      }
+    }
   );
-  console.log("file successfully created.");
-  var files = ["./public/" + fileName]; //, "./public/SnakeGame.exe"];
-
-  //creating FID...
-  var FID = jre
-    .spawnSync(
-      // call synchronously
-      ["java"], // add the relative directory 'java' to the class-path
-      "FID", // call main routine in class 'FID'
-      files, // pass files as parameters
-      { encoding: "utf8" } // encode output as string
-    )
-    .stdout.trim(); // take output from stdout as trimmed String
-  console.log("FID: " + FID);
-
-  //set HID and FID in the contract here...
-  var updates = {
-    hid: HID,
-    fid: FID,
-    isValuesReceived: true
-  };
-  contractOperations.updateData(email, updates, response => {
-    if (response == 1) {
-      console.log("user hid updated in db");
-      //res.status(200).send({ message: "User authenticated" });
-    } else console.log("user hid not updated ");
-    /*res
-        .status(500)
-        .send({ message: "some error occured while authenticating..." });*/
-  });
 
   // res.write(valid,() => {  //fileName coz the setup will download this file...
   //   console.log(valid);
