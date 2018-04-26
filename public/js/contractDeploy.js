@@ -1,4 +1,4 @@
-window.addEventListener("load", fetchUndeployedContracts);
+window.addEventListener("load", init);
 var contractsData = [];
 var deployedContractsData = [];
 
@@ -8,20 +8,30 @@ function init() {
     // Use Mist/MetaMask's provider
     window.web3 = new Web3(web3.currentProvider);
     console.log("Seems to be working");
-    // setWeb3Version();
-    //doGetAccounts();
+    doGetAccounts();
   } else {
     console.log("Injected web3 Not Found!!!");
-    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-    // window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:1234'));
-
-    // var provider = document.getElementById('provider_url').value;
-    // window.web3 = new Web3(new Web3.providers.HttpProvider(provider));
   }
 }
 
+function doGetAccounts() {
+  web3.eth.getAccounts(function(error, result) {
+    if (error) {
+      console.log("Error---->" + error);
+    } else {
+      accounts = result;
+      console.log("accounts-count" + result.length);
+      // You need to have at least 1 account to proceed
+      if (result.length == 0) {
+        // document.getElementById("retry").hidden = false;
+        alert("Unlock MetaMask and press refresh");
+        return;
+      } else fetchUndeployedContracts();
+    }
+  });
+}
+
 function fetchUndeployedContracts() {
-  init();
   $.ajax({
     type: "POST",
     url: "http://localhost:1234/unDeployedContracts",
@@ -74,28 +84,27 @@ function fetchDeployedContracts() {
 }
 
 function updateContractList() {
-  var str = "<ul>";
+  var str = "<ul class='list-group'>";
   console.log(JSON.stringify("updateContractList++++++++++++" + contractsData));
   for (let i in contractsData) {
     console.log("contracts data-----" + JSON.stringify(contractsData[i]));
     str +=
-      "<li>" +
+      "<li class='list-group-item clearfix'>" +
       contractsData[i].email +
-      contractsData[i].abi.constant +
-      `<button id='${
+      `<button class='btn btn-success float-right' id='${
         contractsData[i].email
-      }' onClick="deployContract('${i}')">Deploy</button></li>`;
+      }' onClick="deployContract('${i}')">Deploy <i class="fas fa-cloud-upload-alt"></i></button></li>`;
   }
   str += "</ul>";
 
   $("#list").append(str);
 
-  var str1 = "<ul>";
+  var str1 = "<ul class='list-group'>";
   for (i in deployedContractsData) {
     str1 +=
-      "<li>" +
+      "<li class='list-group-item clearfix'>" +
       deployedContractsData[i].email +
-      `<button onClick=setContractValue('${i}')>SET DATA</button></li>`;
+      `<button class='btn btn-warning float-right' onClick=setContractValue('${i}')>SET DATA <i class="fas fa-edit"></i></button></li>`;
   }
   str1 += "</ul>";
   $("#setValues").append(str1);
@@ -171,22 +180,22 @@ function setContractValue(index) {
   };
 
   let count = 0;
-  contractAtAddress.getSoftwareHash(value, function(error, result) {
+  contractAtAddress.setSoftwareHash(data.fid, value, function(error, result) {
     if (!error) {
       console.log("result of setsoftwarehash method=" + result);
       count++;
-      if (count == 5) {
+      if (count == 2) {
         sendContractValueSetStatus(data.email);
       }
     } else console.log("error=" + error);
   });
 
-  contractAtAddress.getHID(value, function(error, result) {
+  contractAtAddress.setHID(data.hid, value, function(error, result) {
     if (!error) {
       console.log("result of sethid method=" + result);
       count++;
 
-      if (count == 5) {
+      if (count == 2) {
         sendContractValueSetStatus(data.email);
       }
     } else console.log(" error=" + error);

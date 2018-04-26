@@ -76,7 +76,7 @@ var contractOperations = {
         result(500, "Error");
       }
       if (data && data != null) {
-        result(200, data.contractAddress);
+        result(200, data);
       } else {
         result(400, "user not found...");
       }
