@@ -107,46 +107,58 @@ app.post("/loginClient", (req, res) => {
 
             contractOperations.fetchContractAddress(email, (status, value) => {
               if (status == 200) {
-                contractAddress = value;
+                // if (!value.isValuesSet) {
+                if (value.isDeployed) {
+                  contractAddress = value.contractAddress;
 
-                /*creating user specific file*/
-                var fileName = "user" + email + ".ini";
-                fs.writeFileSync(
-                  "./public/" + fileName,
-                  mmAddress + "\r\n" + contractAddress
-                );
-                console.log("file successfully created.");
-                var files = ["./public/" + fileName]; //, "./public/SnakeGame.exe"];
+                  /*creating user specific file*/
+                  var fileName = "user" + email + ".ini";
+                  fs.writeFileSync(
+                    "./public/" + fileName,
+                    mmAddress + "\r\n" + contractAddress
+                  );
+                  console.log("file successfully created.");
+                  var files = ["./public/" + fileName]; //, "./public/SnakeGame.exe"];
 
-                //creating FID...
-                var FID = jre
-                  .spawnSync(
-                    // call synchronously
-                    ["java"], // add the relative directory 'java' to the class-path
-                    "FID", // call main routine in class 'FID'
-                    files, // pass files as parameters
-                    { encoding: "utf8" } // encode output as string
-                  )
-                  .stdout.trim(); // take output from stdout as trimmed String
-                console.log("FID: " + FID);
+                  //creating FID...
+                  var FID = jre
+                    .spawnSync(
+                      // call synchronously
+                      ["java"], // add the relative directory 'java' to the class-path
+                      "FID", // call main routine in class 'FID'
+                      files, // pass files as parameters
+                      { encoding: "utf8" } // encode output as string
+                    )
+                    .stdout.trim(); // take output from stdout as trimmed String
+                  console.log("FID: " + FID);
 
-                //set HID and FID in the contract here...
-                var updates = {
-                  hid: HID,
-                  fid: FID,
-                  isValuesReceived: true
-                };
-                contractOperations.updateData(email, updates, response => {
-                  if (response == 1) {
-                    console.log("user hid updated in db");
-                    res.status(200).send({ message: "User authenticated" });
-                  } else {
-                    console.log("user hid not updated ");
-                    res.status(500).send({
-                      message: "some error occured while authenticating..."
-                    });
-                  }
-                });
+                  //set HID and FID in the contract here...
+                  var updates = {
+                    hid: HID,
+                    fid: FID,
+                    isValuesReceived: true
+                  };
+                  contractOperations.updateData(email, updates, response => {
+                    if (response == 1) {
+                      console.log("user hid,fid updated in db");
+                      res.status(200).send({ message: "User authenticated" });
+                    } else {
+                      console.log("user hid not updated ");
+                      res.status(500).send({
+                        message: "some error occured while authenticating..."
+                      });
+                    }
+                  });
+                } else {
+                  res.status(501).send({
+                    message: "Work in progrss.Try later..."
+                  });
+                }
+                /* } else {
+                  res.status(500).send({
+                    message: "Redundant installation attempt..."
+                  });
+                }*/
                 //////////////////////////////
               } else {
                 console.log("some error occured...");
@@ -165,12 +177,6 @@ app.post("/loginClient", (req, res) => {
       }
     }
   );
-
-  // res.write(valid,() => {  //fileName coz the setup will download this file...
-  //   console.log(valid);
-  // });
-  //aage ka code yaha pe
-  //console.log(res.connection.address());
 });
 
 app.post("/setupComplete", (req, res) => {
